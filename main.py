@@ -6,7 +6,7 @@ from helpers.strings import *
 
 import sys
 
-FILE_PATH = 'files/logs/BLACKBOX.csv'
+FILE_PATH = 'files/logs/test.csv'
 
 if __name__ == '__main__':
 
@@ -21,6 +21,7 @@ if __name__ == '__main__':
     north, east = parser.parse_location_values()
     height_data = parser.parse_height_values()
     signal_data = parser.parse_signal_values()
+    roll_, pitch_, yaw_ = parser.parse_gyr_angle()
 
     graphics = APUGraphic(time_line)
 
@@ -43,7 +44,8 @@ if __name__ == '__main__':
         3: lambda: graphics.create_graphic("orientation_graphic", [roll, pitch, yaw, 'Roll', 'Pitch', 'Yaw']),
         4: lambda: graphics.create_graphic("location_graphic", [north, east, 'North', 'East']),
         5: lambda: graphics.create_graphic("sh_graphic", [height_data, signal_data, 'Height', 'Signal']),
-        6: lambda: menu.go_back()
+        6: lambda: graphics.create_graphic("Gyro angels", [roll_, pitch_, yaw_, 'Roll', 'Pitch', 'Yaw']),
+        7: lambda: menu.go_back()
     })
 
     menu.current_menu_obj = main_menu

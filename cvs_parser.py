@@ -42,6 +42,9 @@ class DataParser:
 
         return height_values
 
+    def parse_gyr_angle(self):
+        return self.__axis3template([14, 15, 16])
+
     def parse_signal_values(self):
         signal_values = []
         for i in range(len(self.data)):
