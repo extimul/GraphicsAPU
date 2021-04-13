@@ -7,7 +7,7 @@ from helpers.strings import *
 from time import time
 from sys import exit
 
-FILE_PATH = 'files/logs/test.csv'
+FILE_PATH = 'files/logs/BLACKBOX.csv'
 
 if __name__ == '__main__':
 

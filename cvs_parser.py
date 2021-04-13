@@ -34,7 +34,7 @@ class DataParser:
         height_values = []
         for i in range(len(self.data)):
             for j in range(len(self.data[i])):
-                if j == 13:
+                if j == 12:
                     temp = str(self.data[i][j])
                     temp = temp.split("+", 1)
                     height = temp[1]
@@ -49,7 +49,7 @@ class DataParser:
         signal_values = []
         for i in range(len(self.data)):
             for j in range(len(self.data[i])):
-                if j == 12:
+                if j == 13:
                     value = int(self.data[i][j])
                     signal_values.append(value)
 
