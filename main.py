@@ -4,7 +4,8 @@ from cvs_parser import DataParser
 from helpers.console_menu import Menu, MenuModel
 from helpers.strings import *
 
-import sys
+from time import time
+from sys import exit
 
 FILE_PATH = 'files/logs/test.csv'
 
@@ -14,6 +15,8 @@ if __name__ == '__main__':
     data = reader.read_data()
 
     parser = DataParser(data)
+
+    start_time = time()
     time_line = parser.parse_time_line()
     gyrX_data, gyrY_data, gyrZ_data = parser.parse_gyr_values()
     accX_data, accY_data, accZ_data = parser.parse_acc_values()
@@ -23,6 +26,8 @@ if __name__ == '__main__':
     signal_data = parser.parse_signal_values()
     roll_, pitch_, yaw_ = parser.parse_gyr_angle()
 
+    print(f'Parse is end: {time() - start_time}')
+
     graphics = APUGraphic(time_line)
 
     menu = Menu()
@@ -30,7 +35,7 @@ if __name__ == '__main__':
     main_menu = MenuModel('Главное меню', MAIN_MENU, {
         1: lambda: menu.go_forward(graphics_menu),
         2: lambda: menu.go_forward(settings_menu),
-        3: lambda: sys.exit()
+        3: lambda: exit()
     })
 
     settings_menu = MenuModel('Настройки', SETTINGS_MENU, {
