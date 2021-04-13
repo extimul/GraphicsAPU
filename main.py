@@ -7,7 +7,7 @@ from libs.strings import *
 from sys import exit
 
 from time import time
-import asyncio
+from multiprocessing import Process
 FILE_PATH = 'files/logs/BLACKBOX.csv'
 
 
@@ -16,10 +16,6 @@ class GraphicsAPU:
         self.data_parser = self.__init_data_parser()
         self.data_buffer = GraphicsData([], [], [], [], [], [], [], [], [], [], [], [], [], [], [])
         self.__init_task()
-
-    @property
-    def loop(self):
-        return asyncio.get_event_loop()
 
     @staticmethod
     def __init_data_parser():
@@ -30,42 +26,37 @@ class GraphicsAPU:
     def __init_cli(self):
         pass
 
-    async def parse_time_line(self):
+    def parse_time_line(self):
         self.data_buffer.TimeLine = self.data_parser.parse_time_line()
-        await asyncio.sleep(0.1)
 
-    async def parse_acc_data(self):
+    def parse_acc_data(self):
         self.data_buffer.AccX, self.data_buffer.AccY, self.data_buffer.AccZ = self.data_parser.parse_acc_values()
-        await asyncio.sleep(0.1)
 
-    async def parse_gyr_data(self):
+    def parse_gyr_data(self):
         self.data_buffer.GyrX, self.data_buffer.GyrY, self.data_buffer.GyrZ = self.data_parser.parse_gyr_values()
-        await asyncio.sleep(0.1)
 
-    async def parse_orientation_data(self):
+    def parse_orientation_data(self):
         self.data_buffer.GyrX, self.data_buffer.GyrY, self.data_buffer.GyrZ = self.data_parser.parse_orientation_values()
-        await asyncio.sleep(0.1)
 
-    async def parse_RTK_data(self):
+    def parse_RTK_data(self):
         self.data_buffer.Signal, self.data_buffer.Altitude = self.data_parser.parse_RTK_values()
-        await asyncio.sleep(0.1)
 
-    async def parse_rudders_data(self):
+    def parse_rudders_data(self):
         self.data_buffer.Elevator, self.data_buffer.Aileron, self.data_buffer.Rudder = self.data_parser.parse_rudders_angle()
-        await asyncio.sleep(0.1)
 
     def __init_task(self):
         start_time = time()
-        coroutines = [self.parse_time_line(),
-                      self.parse_acc_data(),
-                      self.parse_gyr_data(),
-                      self.parse_orientation_data(),
-                      self.parse_RTK_data(),
-                      self.parse_rudders_data()]
+        funcs = [self.parse_time_line(),
+                 self.parse_acc_data(),
+                 self.parse_gyr_data(),
+                 self.parse_orientation_data(),
+                 self.parse_RTK_data(),
+                 self.parse_rudders_data()]
 
-        tasks = [self.loop.create_task(coro) for coro in coroutines]
-
-        self.loop.run_until_complete(asyncio.gather(*tasks))
+        for i in range(len(funcs)):
+            process = Process(target=funcs[i], name=f'P{i}')
+            process.start()
+            # process.join()
 
         print(f'Tasks down: {time() - start_time}')
 
